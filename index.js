@@ -21,7 +21,7 @@ cats.forEach(cat => {
 
   // Create Cat
   const catPic = document.createElement("img");
-  catPic.setAttribute("src", `img/${cat.name}.jpg`);
+  catPic.setAttribute("src", `images/${cat.name}.jpg`);
   const catName = document.createElement("span");
   catName.innerText = cat.name;
   const catCounter = document.createElement("span");
