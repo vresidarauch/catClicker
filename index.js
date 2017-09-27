@@ -51,7 +51,8 @@ catSelector.addEventListener("change", e => {
   // Get all the existing cats
   const cats = document.querySelectorAll(".cat");
 
-  // Loop through cats, hide them all
+  // Loop through cats, hide them all if it doesn't
+  // have a hidden class already
   cats.forEach(cat => {
     if (!cat.classList.contains("hidden")) {
       cat.classList.add("hidden");
@@ -59,6 +60,7 @@ catSelector.addEventListener("change", e => {
   });
 
   // Show the cat that matches the data attribute
+  // that is selected from the list unhide it
   const value = event.target.value;
   const cat = document.querySelector(`div[data-cat="${value}"]`);
   cat.classList.remove("hidden");
