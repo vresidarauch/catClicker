@@ -1,8 +1,13 @@
 // Define and array of cat objects
 const cats = [
-  { name: "Bad Hair Day", count: 0 },
-  { name: "No Hair Day", count: 0 },
-  { name: "cat3", count: 0 }
+  { name: "cat-bad-hair-day", count: 0 },
+  { name: "evil-cat", count: 0 },
+  { name: "lizard-nose-ring", count: 0 },
+  { name: "bathing-cats", count: 0 },
+  { name: "jumping-cat", count: 0 },
+  { name: "oops-cat", count: 0 },
+  { name: "supreme-cat", count: 0 },
+  { name: "sushi-roll-cat", count: 0 }
 ];
 const catSelector = document.getElementById("cats");
 const catContainer = document.querySelector(".cats");
@@ -29,7 +34,7 @@ cats.forEach(cat => {
 
   // Add click listener to cat
   catPic.addEventListener("click", () => {
-    cat.count += 1;
+    cat.count++;
     catCounter.innerText = cat.count;
   });
 
