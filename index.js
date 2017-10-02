@@ -91,12 +91,6 @@ const catView = {
     this.catNameEl.innerText = currentCat.name;
     this.catImgEl.src = currentCat.imgSrc;
     this.countEl.innerText = "Click count: " + currentCat.clickCount;
-    console.log(
-      currentCat,
-      this.catNameEl,
-      this.catImgEl,
-      this.countEl.innerText
-    );
   }
 };
 
