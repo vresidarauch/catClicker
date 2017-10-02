@@ -1,67 +1,141 @@
-// Define and array of cat objects
-const cats = [
-  { name: "cat-bad-hair-day", count: 0 },
-  { name: "evil-cat", count: 0 },
-  { name: "lizard-nose-ring", count: 0 },
-  { name: "bathing-cats", count: 0 },
-  { name: "jumping-cat", count: 0 },
-  { name: "oops-cat", count: 0 },
-  { name: "supreme-cat", count: 0 },
-  { name: "sushi-roll-cat", count: 0 }
-];
-const catSelector = document.getElementById("cats");
-const catContainer = document.querySelector(".cats");
+// Model:  Define and array of cat objects
+const model = {
+  currentCat: null,
+  cats: [
+    {
+      name: "Bad Hair Day",
+      imgSrc: "images/cat-bad-hair-day.jpg",
+      clickCount: 0
+    },
+    { name: "No Hair Day", imgSrc: "images/evil-cat.jpg", clickCount: 0 },
+    {
+      name: "Lizard Nose Ring",
+      imgSrc: "images/lizard-nose-ring.jpg",
+      clickCount: 0
+    },
+    {
+      name: "Calgon Moments",
+      imgSrc: "images/bathing-cats.jpg",
+      clickCount: 0
+    },
+    { name: "Jumping Jack", imgSrc: "images/jumping-cat.jpg", clickCount: 0 },
+    { name: "Oops!", imgSrc: "images/oops-cat.jpg", clickCount: 0 },
+    {
+      name: "The Supreme Ruler",
+      imgSrc: "images/supreme-cat.jpg",
+      clickCount: 0
+    },
+    { name: "Sushi Roll", imgSrc: "images/sushi-roll-cat.jpg", clickCount: 0 }
+  ]
+};
 
-cats.forEach(cat => {
-  // Create option for each cat
-  const catOption = document.createElement("option");
-  catOption.value = cat.name;
-  catOption.innerText = cat.name;
-  catSelector.appendChild(catOption);
+//Octopus/Controller
+const octopus = {
+  init() {
+    // Set current cat to first one in the list
+    model.currentCat = model.cats[0];
 
-  // Create Box
-  const catBox = document.createElement("div");
-  catBox.setAttribute("data-cat", cat.name);
-  catBox.className = "hidden cat";
+    // Initialize views
+    catView.init();
+    catListView.init();
+  },
 
-  // Create Cat
-  const catPic = document.createElement("img");
-  catPic.setAttribute("src", `images/${cat.name}.jpg`);
-  const catName = document.createElement("span");
-  catName.innerText = cat.name;
-  const catCounter = document.createElement("span");
-  catCounter.innerText = 0;
+  // Get the array of cats from the Model
+  // get makes the cats() function a property
+  // that is called without parens
+  // i.e. cats = octopus.cats
+  get cats() {
+    return model.cats;
+  },
 
-  // Add click listener to cat
-  catPic.addEventListener("click", () => {
-    cat.count++;
-    catCounter.innerText = cat.count;
-  });
+  // Get the Model's currentCat property
+  get currentCat() {
+    return model.currentCat;
+  },
 
-  // Add cat to box
-  catBox.appendChild(catName);
-  catBox.appendChild(catPic);
-  catBox.appendChild(catCounter);
+  // setter for currentCat
+  // Sets the Model's currentCat value to the
+  // parameter cat i.e. octopus.currentCat = cat;
+  set currentCat(cat) {
+    model.currentCat = cat;
+  },
 
-  // Add box to container
-  catContainer.appendChild(catBox);
-});
+  // increment counter then render
+  incrementCounter() {
+    model.currentCat.clickCount++;
+    catView.render();
+  }
+};
 
-catSelector.addEventListener("change", e => {
-  // Get all the existing cats
-  const cats = document.querySelectorAll(".cat");
+// View(s): Creating DOM objects
 
-  // Loop through cats, hide them all if it doesn't
-  // have a hidden class already
-  cats.forEach(cat => {
-    if (!cat.classList.contains("hidden")) {
-      cat.classList.add("hidden");
+const catView = {
+  init() {
+    // Create variables on the catView object and
+    // store pointers to DOM elements for later access
+    this.catEl = document.querySelector(".cat");
+    this.catNameEl = document.querySelector(".cat-name");
+    this.catImgEl = document.querySelector(".cat-img");
+    this.countEl = document.querySelector(".cat-count");
+
+    // on click, increment cat's counter
+    this.catImgEl.addEventListener("click", e => octopus.incrementCounter());
+
+    // render this view (update DOM elements)
+    this.render();
+  },
+
+  render() {
+    // Get the cats from the octopus/controller
+    const currentCat = octopus.currentCat;
+    this.catNameEl.innerText = currentCat.name;
+    this.catImgEl.src = currentCat.imgSrc;
+    this.countEl.innerText = "Click count: " + currentCat.clickCount;
+    console.log(
+      currentCat,
+      this.catNameEl,
+      this.catImgEl,
+      this.countEl.innerText
+    );
+  }
+};
+
+const catListView = {
+  init() {
+    // store DOM elements for later access
+    this.catListEl = document.getElementById("cat-list");
+
+    // get the cats from the octopus/controller
+    this.cats = octopus.cats;
+
+    // Add listener on select to change current cat and render
+    this.catListEl.addEventListener("change", e => {
+      const cat = this.cats.find(cat => cat.name === e.target.value);
+
+      octopus.currentCat = cat;
+      catView.render();
+    });
+
+    // render this view (update DOM elements)
+    this.render();
+  },
+
+  render() {
+    // Get the cats from the octopus/controller
+    this.cats = octopus.cats;
+
+    // remove all options from the select menu
+    this.catListEl.innerHTML = octopus.currentCat.name;
+
+    // loop over cats
+    for (const cat of this.cats) {
+      // Make new option, set values
+      const option = document.createElement("option");
+      option.value = cat.name;
+      option.innerText = cat.name;
+      this.catListEl.appendChild(option);
     }
-  });
+  }
+};
 
-  // Show the cat that matches the data attribute
-  // that is selected from the list unhide it
-  const value = event.target.value;
-  const cat = document.querySelector(`div[data-cat="${value}"]`);
-  cat.classList.remove("hidden");
-});
+octopus.init();

@@ -7,32 +7,22 @@
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Cat Clicker</title>
     <link rel="shortcut icon" type="image/x-icon" href="favicon.ico" />
-    <style>
-        .cats {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        img {
-            width: 100%;
-        }
-
-        .hidden {
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" href="style.css">
 </head>
 
 <body>
 
-    <div class="cat-selector">
-        <select name="cats" id="cats">
-      <option value="">Select a cat to start clicking!</option>
-    </select>
-    </div>
+    <!-- Cat selector template -->
+    <select name="cats" id="cat-list"></select>
 
-    <div class="cats"></div>
+    <!-- Cat view template -->
+
+    <div class="cat">
+        <h2 class="cat-name"></h2>
+        <img src="" alt="cute cat" class="cat-img">
+        <div class="cat-count">
+        </div>
+    </div>
 
 
     <script src="index.js"></script>

@@ -1,0 +1,19 @@
+.cat {
+  text-align: center;
+}
+.cat-img {
+  width: 100%;
+}
+.cat-count {
+  text-align: center;
+}
+
+/**********************/
+/* Tablet Media Query */
+/**********************/
+
+@media (min-width: 48em) {
+  .cat-img {
+    width: 50%;
+  }
+}
