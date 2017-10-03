@@ -17,3 +17,34 @@
     width: 50%;
   }
 }
+
+.admin-button {
+  position: fixed;
+  top: 100px;
+  left: 16px;
+  font-size: 2em;
+}
+
+.admin {
+  position: fixed;
+  top: 160px;
+  left: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.admin > input {
+  margin-bottom: 15px;
+}
+
+.buttons {
+  display: flex;
+}
+
+.button {
+  flex-grow: 1;
+}
+
+.hidden {
+  display: none;
+}

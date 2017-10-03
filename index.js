@@ -38,6 +38,7 @@ const octopus = {
     // Initialize views
     catView.init();
     catListView.init();
+    adminView.init();
   },
 
   // Get the array of cats from the Model
@@ -108,6 +109,9 @@ const catListView = {
 
       octopus.currentCat = cat;
       catView.render();
+
+      // Render the admin area
+      adminView.render();
     });
 
     // render this view (update DOM elements)
@@ -129,6 +133,67 @@ const catListView = {
       option.innerText = cat.name;
       this.catListEl.appendChild(option);
     }
+    // Set current 
+    this.catListEl.value = octopus.currentCat.name;
+  }
+};
+
+// premium pro version only!
+const adminView = {
+  init() {
+    // store DOM elements for later access as a property on the adminView
+    this.adminBtn = document.querySelector('.admin-button');
+    this.adminArea = document.querySelector('.admin');
+    this.saveBtn = document.querySelector('.save');
+    this.cancelBtn = document.querySelector('.cancel');
+    this.adminName = document.querySelector('#name');
+    this.adminImg = document.querySelector('#imgUrl');
+    this.adminCount = document.querySelector('#clicks');
+
+    // admin click listener to toggle visibility
+    this.adminBtn.addEventListener('click', () => {
+      this.adminArea.classList.toggle('hidden');
+    });
+
+    // cancel button hides admin area because we are adding the class of hidden
+    this.cancelBtn.addEventListener('click', () =>
+      this.adminArea.classList.add('hidden')
+    );
+
+    // save button grabs values, sets current cat with new data
+    this.saveBtn.addEventListener('click', () => {
+      // grab values of new data from the HTML nput elements
+      const newCat = {
+        name: this.adminName.value,
+        imgSrc: this.adminImg.value,
+        clickCound: this.adminCount.value
+      };
+
+      //get current index of cat
+      const currentCatIndex = octopus.cats.findIndex(
+        cat => octopus.currentCat === cat
+      );
+
+      // set cat with new data, set new currentCat
+      octopus.cats[currentCatIndex] = newCat;  //overwrite the existing cat
+      octopus.currentCat = octopus.cats[currentCatIndex]; // make sure the index points to the newCat index
+
+      // update catView and catListView
+      catView.render();
+      catListView.render();
+    });
+
+    this.render();
+  },
+
+  // Render changes the DOM
+  render() {
+    // Get the current cat from the octopus/controller
+    // and set the input elements' values
+    const currentCat = octopus.currentCat;
+    this.adminName.value = currentCat.name;
+    this.adminImg.value = currentCat.imgSrc;
+    this.adminCount.value = currentCat.clickCount;
   }
 };
 
