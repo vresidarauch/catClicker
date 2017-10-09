@@ -1,18 +1,18 @@
-.cat {
+.catData {
   text-align: center;
 }
-.cat-img {
+/* .cat-img {
   width: 100%;
 }
 .cat-count {
   text-align: center;
-}
+} */
 
 /**********************/
 /* Tablet Media Query */
 /**********************/
 
-@media (min-width: 48em) {
+/* @media (min-width: 48em) {
   .cat-img {
     width: 50%;
   }
@@ -47,4 +47,4 @@
 
 .hidden {
   display: none;
-}
+} */

@@ -1,200 +1,110 @@
-// Model:  Define and array of cat objects
-const model = {
-  currentCat: null,
-  cats: [
-    {
-      name: "Bad Hair Day",
-      imgSrc: "images/cat-bad-hair-day.jpg",
-      clickCount: 0
-    },
-    { name: "No Hair Day", imgSrc: "images/evil-cat.jpg", clickCount: 0 },
-    {
-      name: "Lizard Nose Ring",
-      imgSrc: "images/lizard-nose-ring.jpg",
-      clickCount: 0
-    },
-    {
-      name: "Calgon Moments",
-      imgSrc: "images/bathing-cats.jpg",
-      clickCount: 0
-    },
-    { name: "Jumping Jack", imgSrc: "images/jumping-cat.jpg", clickCount: 0 },
-    { name: "Oops!", imgSrc: "images/oops-cat.jpg", clickCount: 0 },
-    {
-      name: "The Supreme Ruler",
-      imgSrc: "images/supreme-cat.jpg",
-      clickCount: 0
-    },
-    { name: "Sushi Roll", imgSrc: "images/sushi-roll-cat.jpg", clickCount: 0 }
-  ]
-};
-
-//Octopus/Controller
-const octopus = {
-  init() {
-    // Set current cat to first one in the list
-    model.currentCat = model.cats[0];
-
-    // Initialize views
-    catView.init();
-    catListView.init();
-    adminView.init();
+const initialCats = [
+  {
+    clickCount: 0,
+    name: 'Tabby\'s Bad Hair Day',
+    imgSrc: 'images/cat-bad-hair-day.jpg',
+    nicknames: ['Tabtab', 'T-Bone', 'Mr. T', 'Tabitha Tab Tabby Catty Cat']
   },
-
-  // Get the array of cats from the Model
-  // get makes the cats() function a property
-  // that is called without parens
-  // i.e. cats = octopus.cats
-  get cats() {
-    return model.cats;
+  {
+    clickCount: 0,
+    name: 'Bare\'s No Hair Day',
+    imgSrc: 'images/evil-cat.jpg',
+    nicknames: ['Baldy', 'Barely', 'Hairy']
   },
-
-  // Get the Model's currentCat property
-  get currentCat() {
-    return model.currentCat;
+  {
+    clickCount: 0,
+    name: 'Sushi Roll',
+    imgSrc: 'images/sushi-roll-cat.jpg',
+    nicknames: ['Kitty Kitty', 'Sushi']
   },
-
-  // setter for currentCat
-  // Sets the Model's currentCat value to the
-  // parameter cat i.e. octopus.currentCat = cat;
-  set currentCat(cat) {
-    model.currentCat = cat;
+  {
+    clickCount: 0,
+    name: 'Calgon Moments',
+    imgSrc: 'images/bathing-cats.jpg',
+    nicknames: ['Muffy and Cally', 'Booboo and Butt Head']
   },
-
-  // increment counter then render
-  incrementCounter() {
-    model.currentCat.clickCount++;
-    catView.render();
+  {
+    clickCount: 0,
+    name: 'Jumping Jack Flash',
+    imgSrc: 'images/jumping-cat.jpg',
+    nicknames: ['Jackie', 'JJ', 'Scardy Cat']
+  },
+  {
+    clickCount: 0,
+    name: 'Lizard Nose Ring',
+    imgSrc: 'images/lizard-nose-ring.jpg',
+    nicknames: ['Mr. Gadget', 'Sid']
+  },
+  {
+    clickCount: 0,
+    name: 'Oops!',
+    imgSrc: 'images/oops-cat.jpg',
+    nicknames: ['Spot', 'Klutz']
+  },
+  {
+    clickCount: 0,
+    name: 'Supreme Cat',
+    imgSrc: 'images/supreme-cat.jpg',
+    nicknames: ['His Highness', 'Boobah']
   }
-};
+]
+const ViewModel = function () {
+  const self = this; // always the ViewModel
 
-// View(s): Creating DOM objects
+  this.catList = ko.observableArray([]);
 
-const catView = {
-  init() {
-    // Create variables on the catView object and
-    // store pointers to DOM elements for later access
-    this.catEl = document.querySelector(".cat");
-    this.catNameEl = document.querySelector(".cat-name");
-    this.catImgEl = document.querySelector(".cat-img");
-    this.countEl = document.querySelector(".cat-count");
+  initialCats.forEach(catData => self.catList.push(new Cat(catData)));
 
-    // on click, increment cat's counter
-    this.catImgEl.addEventListener("click", e => octopus.incrementCounter());
+  this.currentCat = ko.observable(this.catList()[0]);
 
-    // render this view (update DOM elements)
-    this.render();
-  },
-
-  render() {
-    // Get the cats from the octopus/controller
-    const currentCat = octopus.currentCat;
-    this.catNameEl.innerText = currentCat.name;
-    this.catImgEl.src = currentCat.imgSrc;
-    this.countEl.innerText = "Click count: " + currentCat.clickCount;
+  self.setCat = function (cat) {
+    self.currentCat(cat);
   }
+
+  this.incrementCounter = function () {
+    return self.currentCat().clickCount(self.currentCat().clickCount() + 1);
+  };
 };
 
-const catListView = {
-  init() {
-    // store DOM elements for later access
-    this.catListEl = document.getElementById("cat-list");
 
-    // get the cats from the octopus/controller
-    this.cats = octopus.cats;
+const Cat = function (data) {
+  this.clickCount = ko.observable(data.clickCount);
+  this.name = ko.observable(data.name);
+  this.imgSrc = ko.observable(data.imgSrc);
+  this.nicknames = ko.observableArray(data.nicknames);
 
-    // Add listener on select to change current cat and render
-    this.catListEl.addEventListener("change", e => {
-      const cat = this.cats.find(cat => cat.name === e.target.value);
+  this.level = ko.computed(function () {
+    let level = 'Newborn';
 
-      octopus.currentCat = cat;
-      catView.render();
-
-      // Render the admin area
-      adminView.render();
-    });
-
-    // render this view (update DOM elements)
-    this.render();
-  },
-
-  render() {
-    // Get the cats from the octopus/controller
-    this.cats = octopus.cats;
-
-    // remove all options from the select menu
-    this.catListEl.innerHTML = octopus.currentCat.name;
-
-    // loop over cats
-    for (const cat of this.cats) {
-      // Make new option, set values
-      const option = document.createElement("option");
-      option.value = cat.name;
-      option.innerText = cat.name;
-      this.catListEl.appendChild(option);
+    // Calculate level based on click count
+    if (this.clickCount() > 700) {
+      level = 'Old Codger';
     }
-    // Set current 
-    this.catListEl.value = octopus.currentCat.name;
-  }
+    else if (this.clickCount() > 550) {
+      level = 'Middle Aged';
+    }
+    else if (this.clickCount() > 400) {
+      level = 'Adult';
+    }
+    else if (this.clickCount() > 300) {
+      level = 'Young Adult';
+    }
+    else if (this.clickCount() > 200) {
+      level = 'Teen';
+    }
+    else if (this.clickCount() > 100) {
+      level = 'Pre-teen';
+    }
+    else if (this.clickCount() > 50) {
+      level = 'Toddler';
+    }
+    else if (this.clickCount() > 10) {
+      level = 'Infant';
+    }
+
+    return level;
+  }, this);
+
 };
 
-// premium pro version only!
-const adminView = {
-  init() {
-    // store DOM elements for later access as a property on the adminView
-    this.adminBtn = document.querySelector('.admin-button');
-    this.adminArea = document.querySelector('.admin');
-    this.saveBtn = document.querySelector('.save');
-    this.cancelBtn = document.querySelector('.cancel');
-    this.adminName = document.querySelector('#name');
-    this.adminImg = document.querySelector('#imgUrl');
-    this.adminCount = document.querySelector('#clicks');
-
-    // admin click listener to toggle visibility
-    this.adminBtn.addEventListener('click', () => {
-      this.adminArea.classList.toggle('hidden');
-    });
-
-    // cancel button hides admin area because we are adding the class of hidden
-    this.cancelBtn.addEventListener('click', () =>
-      this.adminArea.classList.add('hidden')
-    );
-
-    // save button grabs values, sets current cat with new data
-    this.saveBtn.addEventListener('click', () => {
-      // grab values of new data from the HTML nput elements
-      const newCat = {
-        name: this.adminName.value,
-        imgSrc: this.adminImg.value,
-        clickCound: this.adminCount.value
-      };
-
-      //get current index of cat
-      const currentCatIndex = octopus.cats.findIndex(
-        cat => octopus.currentCat === cat
-      );
-
-      // set cat with new data, set new currentCat
-      octopus.cats[currentCatIndex] = newCat;  //overwrite the existing cat
-      octopus.currentCat = octopus.cats[currentCatIndex]; // make sure the index points to the newCat index
-
-      // update catView and catListView
-      catView.render();
-      catListView.render();
-    });
-
-    this.render();
-  },
-
-  // Render changes the DOM
-  render() {
-    // Get the current cat from the octopus/controller
-    // and set the input elements' values
-    const currentCat = octopus.currentCat;
-    this.adminName.value = currentCat.name;
-    this.adminImg.value = currentCat.imgSrc;
-    this.adminCount.value = currentCat.clickCount;
-  }
-};
-
-octopus.init();
+ko.applyBindings(new ViewModel());
